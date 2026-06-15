@@ -1,0 +1,39 @@
+//
+// Created by Boris Bozhilov on 6/15/2026.
+//
+
+#include "ImagePPM.h"
+#include "Image.h"
+
+#include <fstream>
+
+ImagePPM::ImagePPM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
+    std::vector<PixelRGB>&& pixelData) : Image(ImageType::PPM, width, height, maxValue),
+    pixelData(std::move(pixelData)){
+
+}
+
+std::unique_ptr<Image> ImagePPM::clone() {
+
+    return std::make_unique<ImagePPM>(*this);
+}
+
+void ImagePPM::saveImage(const std::string& filePath) {
+
+    std::ofstream file(filePath);
+    if (!file.is_open()) {
+        throw std::runtime_error("Failed to open file for writing: " + filePath);
+    }
+
+    file << "P3\n"
+         << width << " " << height << "\n"
+         << maxValue << "\n";
+
+    for (unsigned int i = 0; i < size; i++) {
+
+        file << static_cast<int>(pixelData[i].red) << " "
+                << static_cast<int>(pixelData[i].green) << " "
+                << static_cast<int>(pixelData[i].blue) << " ";
+    }
+
+}
