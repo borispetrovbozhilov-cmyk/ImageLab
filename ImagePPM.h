@@ -18,10 +18,12 @@ public:
 
     ImagePPM() = default;
     ImagePPM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
-        std::vector<PixelRGB>&& pixelData;);
+        std::vector<PixelRGB>&& pixelData);
 
-    virtual void saveImage(const std::string& filePath) override;
-    [[nodiscard]] virtual std::unique_ptr<Image> clone() override;
+    virtual void saveImage(const std::string& filePath) const override;
+    [[nodiscard]] virtual std::unique_ptr<Image> clone() const override;
+
+    [[nodiscard]] virtual std::unique_ptr<Image> applyFilter(const std::unique_ptr<Filter>& filter) const override;
 
     ~ImagePPM() override = default;
 };

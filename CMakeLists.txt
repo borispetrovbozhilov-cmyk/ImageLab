@@ -16,4 +16,6 @@ add_executable(ImageLab main.cpp
         ImagePBM.h
         ImageLoader.cpp
         ImageLoader.h
+        Filter.cpp
+        Filter.h
 )

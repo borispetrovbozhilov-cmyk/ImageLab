@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 
+class Filter;
 
 class Image {
 
@@ -17,7 +18,8 @@ public:
     enum class ImageType {
         PPM,
         PGM,
-        PBM
+        PBM,
+        Unknown
     };
 
     Image() = default;
@@ -30,16 +32,18 @@ public:
     [[nodiscard]] unsigned int getWidth() const;
     [[nodiscard]] unsigned int getMaxValue() const;
 
-    virtual void saveImage(const std::string& filePath) = 0;
-    [[nodiscard]] virtual std::unique_ptr<Image> clone() = 0;
+    virtual void saveImage(const std::string& filePath) const = 0;
+    [[nodiscard]] virtual std::unique_ptr<Image> clone() const = 0;
+
+    [[nodiscard]] virtual std::unique_ptr<Image> applyFilter(const std::unique_ptr<Filter>& filter) const = 0;
 
 protected:
 
-    ImageType type;
-    unsigned int size;
-    unsigned int height;
-    unsigned int width;
-    unsigned int maxValue;
+    ImageType type = ImageType::Unknown;
+    unsigned int height = 0;
+    unsigned int width = 0;
+    unsigned int size = 0;
+    unsigned int maxValue = 0;
 
 };
 

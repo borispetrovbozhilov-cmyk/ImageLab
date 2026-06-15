@@ -7,18 +7,20 @@
 
 #include <fstream>
 
+#include "Filter.h"
+
 ImagePGM::ImagePGM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
-    std::vector<uint16_t>&& pixelData) :
+                   std::vector<uint16_t>&& pixelData) :
     Image(ImageType::PGM, width, height, maxValue), pixelData(std::move(pixelData)){
 
 }
 
-std::unique_ptr<Image> ImagePGM::clone() {
+std::unique_ptr<Image> ImagePGM::clone() const {
 
     return std::make_unique<ImagePGM>(*this);
 }
 
-void ImagePGM::saveImage(const std::string& filePath) {
+void ImagePGM::saveImage(const std::string& filePath) const {
 
     std::ofstream file(filePath);
     if (!file.is_open()) {
@@ -33,5 +35,9 @@ void ImagePGM::saveImage(const std::string& filePath) {
 
         file << static_cast<int>(pixelData[i]) << " ";
     }
+}
 
+std::unique_ptr<Image> ImagePGM::applyFilter(const std::unique_ptr<Filter> &filter) const {
+
+    return filter->executeFilter(std::make_unique<ImagePGM>(*this));
 }

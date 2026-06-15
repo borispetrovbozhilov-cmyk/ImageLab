@@ -18,8 +18,10 @@ public:
     ImagePBM() = default;
     ImagePBM(const unsigned int width, const unsigned int height, std::vector<bool>&& pixelData);
 
-    virtual void saveImage(const std::string& filePath) override;
-    [[nodiscard]] virtual std::unique_ptr<Image> clone() override;
+    virtual void saveImage(const std::string& filePath) const override;
+    [[nodiscard]] virtual std::unique_ptr<Image> clone() const override;
+
+    std::unique_ptr<Image> applyFilter(const std::unique_ptr<Filter> &filter) const override;
 
     ~ImagePBM() override = default;
 };

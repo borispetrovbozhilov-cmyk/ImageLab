@@ -7,18 +7,20 @@
 
 #include <fstream>
 
+#include "Filter.h"
+
 ImagePPM::ImagePPM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
-    std::vector<PixelRGB>&& pixelData) : Image(ImageType::PPM, width, height, maxValue),
-    pixelData(std::move(pixelData)){
+                   std::vector<PixelRGB>&& pixelData) : Image(ImageType::PPM, width, height, maxValue),
+                                                        pixelData(std::move(pixelData)){
 
 }
 
-std::unique_ptr<Image> ImagePPM::clone() {
+std::unique_ptr<Image> ImagePPM::clone() const {
 
     return std::make_unique<ImagePPM>(*this);
 }
 
-void ImagePPM::saveImage(const std::string& filePath) {
+void ImagePPM::saveImage(const std::string& filePath) const {
 
     std::ofstream file(filePath);
     if (!file.is_open()) {
@@ -35,5 +37,9 @@ void ImagePPM::saveImage(const std::string& filePath) {
                 << static_cast<int>(pixelData[i].green) << " "
                 << static_cast<int>(pixelData[i].blue) << " ";
     }
+}
 
+std::unique_ptr<Image> ImagePPM::applyFilter(const std::unique_ptr<Filter> &filter) const {
+
+    return filter->executeFilter(std::make_unique<ImagePPM>(*this));
 }

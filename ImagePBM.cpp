@@ -7,17 +7,19 @@
 
 #include <fstream>
 
+#include "Filter.h"
+
 ImagePBM::ImagePBM(const unsigned int width, const unsigned int height, std::vector<bool>&& pixelData) :
     Image(ImageType::PBM, width, height, 0), pixelData(std::move(pixelData)){
 
 }
 
-std::unique_ptr<Image> ImagePBM::clone() {
+std::unique_ptr<Image> ImagePBM::clone() const {
 
     return std::make_unique<ImagePBM>(*this);
 }
 
-void ImagePBM::saveImage(const std::string& filePath) {
+void ImagePBM::saveImage(const std::string& filePath) const {
 
     std::ofstream file(filePath);
     if (!file.is_open()) {
@@ -32,4 +34,9 @@ void ImagePBM::saveImage(const std::string& filePath) {
         file << pixelData[i] << " ";
     }
 
+}
+
+std::unique_ptr<Image> ImagePBM::applyFilter(const std::unique_ptr<Filter> &filter) const {
+
+    return filter->executeFilter(std::make_unique<ImagePBM>(*this));
 }

@@ -26,6 +26,6 @@ unsigned int Image::getWidth() const {
 }
 
 Image::Image(const ImageType type, const unsigned int width, const unsigned int height, const unsigned int maxValue) :
-    type(type), width(width), height(height), maxValue(maxValue), size(width * height){
+    type(type), height(height), width(width), size(width * height), maxValue(maxValue){
 
 }
