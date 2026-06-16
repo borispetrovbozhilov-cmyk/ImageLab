@@ -9,6 +9,8 @@
 #include <vector>
 #include <iostream>
 
+#include "PixelRGB.h"
+
 class Filter;
 
 class Image {

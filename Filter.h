@@ -8,6 +8,8 @@
 #include <functional>
 #include <memory>
 
+#include "PixelRGB.h"
+
 class Image;
 class ImagePBM;
 class ImagePGM;
@@ -38,9 +40,13 @@ public:
 
 protected:
 
-    static std::unique_ptr<Image> travelImageWithKernel3x3
-    (   std::unique_ptr<Image> source,
-        const std::function<std::unique_ptr<Image>(
+    static constexpr unsigned INNER_COUNT_OF_NEIGHBORS_3x3 = 8;
+    static constexpr unsigned BORDER_COUNT_OF_NEIGHBORS_3x3 = 5;
+    static constexpr unsigned CORNER_COUNT_OF_NEIGHBORS_3x3 = 3;
+
+    static std::unique_ptr<Image> travelImageWithKernel3x3_PGM
+    (   std::unique_ptr<ImagePGM> source,
+        const std::function<uint16_t(
             const std::vector<uint16_t>& originalPixels,
             const std::vector<unsigned>& neighbourIndexes,
             const unsigned countOfNeighbours,
@@ -48,6 +54,25 @@ protected:
         )>& indexManipulation
     );
 
+    static std::unique_ptr<Image> travelImageWithKernel3x3_PPM
+    (   std::unique_ptr<ImagePPM> source,
+        const std::function<PixelRGB(
+            const std::vector<PixelRGB>& originalPixels,
+            const std::vector<unsigned>& neighbourIndexes,
+            const unsigned countOfNeighbours,
+            const unsigned maxValue
+        )>& indexManipulation
+    );
+
+    static std::unique_ptr<Image> travelImageWithKernel3x3_PBM
+    (   std::unique_ptr<ImagePBM> source,
+        const std::function<bool(
+            const std::vector<bool>& originalPixels,
+            const std::vector<unsigned>& neighbourIndexes,
+            const unsigned countOfNeighbours,
+            const unsigned maxValue
+        )>& indexManipulation
+    );
 };
 
 #endif //IMAGELAB_FILTER_H

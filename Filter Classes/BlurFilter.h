@@ -23,14 +23,27 @@ public:
 
 protected:
 
-    static constexpr unsigned INNER_COUNT_OF_NEIGHBORS_3x3 = 8;
-    static constexpr unsigned BORDER_COUNT_OF_NEIGHBORS_3x3 = 5;
-    static constexpr unsigned CORNER_COUNT_OF_NEIGHBORS_3x3 = 3;
-
     // utility functions
-    static uint16_t calculateAverageOfNeighbours
+    static uint16_t calculateAverageOfNeighboursPGM
         (const std::vector<uint16_t>& originalPixels,
-        const std::vector<unsigned>& neighbourIndexes, const unsigned countOfNeighbours);
+        const std::vector<unsigned>& neighbourIndexes,
+        const unsigned countOfNeighbours,
+        const unsigned maxValue
+        );
+
+    static bool calculateAverageOfNeighboursPBM
+    (const std::vector<bool>& originalPixels,
+    const std::vector<unsigned>& neighbourIndexes,
+    const unsigned countOfNeighbours,
+    const unsigned maxValue
+    );
+
+    static PixelRGB calculateAverageOfNeighboursPPM
+    (const std::vector<PixelRGB>& originalPixels,
+    const std::vector<unsigned>& neighbourIndexes,
+    const unsigned countOfNeighbours,
+    const unsigned maxValue
+    );
 };
 
 
