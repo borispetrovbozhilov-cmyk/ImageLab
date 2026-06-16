@@ -7,7 +7,7 @@
 
 #include "ImageClasses/ImagePBM.h"
 #include "ImageClasses/ImagePGM.h"
-#include "ImagePPM.h"
+#include "ImageClasses/ImagePPM.h"
 
 std::unique_ptr<Image> ImageLoader::loadImage(const std::string &filePath) {
 

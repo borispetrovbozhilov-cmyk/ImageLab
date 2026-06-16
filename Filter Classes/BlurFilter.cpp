@@ -7,7 +7,9 @@
 #include <cstdint>
 #include <vector>
 
+#include "../ImageClasses/ImagePBM.h"
 #include "../ImageClasses/ImagePGM.h"
+#include "../ImageClasses/ImagePPM.h"
 
 std::unique_ptr<Filter> BlurFilter::clone() const {
 
@@ -98,7 +100,7 @@ std::unique_ptr<Image> BlurFilter::executeFilter(std::unique_ptr<ImagePGM> sourc
     for (unsigned i = bottomLeftCorner + 1; i < bottomRightCorner; i++) {
 
         std::vector<unsigned> neighbourIndexes = {
-            i - 1 - width, i + width, i + 1 - width,
+            i - 1 - width, i - width, i + 1 - width,
             i - 1        ,/*current*/ i + 1
         };
 
@@ -140,25 +142,39 @@ std::unique_ptr<Image> BlurFilter::executeFilter(std::unique_ptr<ImagePGM> sourc
             calculateAverageOfNeighbours(originalPixels, topLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3);
 
     std::vector<unsigned> topRightNeighbors = {
-                /*current*/      topRightCorner + 1        ,
-         topRightCorner + width, topRightCorner + 1 + width
+         topRightCorner - 1        ,       /*current*/
+         topRightCorner - 1 + width, topRightCorner + width
     };
     source->getPixelDataSource()[topLeftCorner] =
         calculateAverageOfNeighbours(originalPixels, topLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3);
 
     std::vector<unsigned> bottomLeftNeighbors = {
-                /*current*/        bottomLeftCorner + 1        ,
-         bottomLeftCorner + width, bottomLeftCorner + 1 + width
+         bottomLeftCorner - width, bottomLeftCorner + 1 - width
+               /*current*/       , bottomLeftCorner + 1
     };
     source->getPixelDataSource()[topLeftCorner] =
         calculateAverageOfNeighbours(originalPixels, topLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3);
 
     std::vector<unsigned> bottomRightNeighbors = {
-                /*current*/         bottomRightCorner + 1        ,
-         bottomRightCorner + width, bottomRightCorner + 1 + width
+        bottomRightCorner - width - 1, bottomRightCorner - width,
+        bottomRightCorner - 1                   /*current*/
     };
     source->getPixelDataSource()[topLeftCorner] =
         calculateAverageOfNeighbours(originalPixels, topLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3);
+
+    return std::move(source);
+}
+
+std::unique_ptr<Image> BlurFilter::executeFilter(std::unique_ptr<ImagePBM> source) const {
+
+    const auto temp = source->getPixelDataSource();
+
+    return std::move(source);
+}
+
+std::unique_ptr<Image> BlurFilter::executeFilter(std::unique_ptr<ImagePPM> source) const {
+
+    const auto temp = source->getPixelDataSource();
 
     return std::move(source);
 }

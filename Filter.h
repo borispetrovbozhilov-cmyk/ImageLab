@@ -4,6 +4,8 @@
 
 #ifndef IMAGELAB_FILTER_H
 #define IMAGELAB_FILTER_H
+#include <cstdint>
+#include <functional>
 #include <memory>
 
 class Image;
@@ -33,6 +35,19 @@ public:
     [[nodiscard]] virtual std::unique_ptr<Filter> clone() const = 0;
 
     virtual ~Filter() = default;
+
+protected:
+
+    static std::unique_ptr<Image> travelImageWithKernel3x3
+    (   std::unique_ptr<Image> source,
+        const std::function<std::unique_ptr<Image>(
+            const std::vector<uint16_t>& originalPixels,
+            const std::vector<unsigned>& neighbourIndexes,
+            const unsigned countOfNeighbours,
+            const unsigned maxValue
+        )>& indexManipulation
+    );
+
 };
 
 #endif //IMAGELAB_FILTER_H

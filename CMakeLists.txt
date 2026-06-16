@@ -28,4 +28,10 @@ add_executable(ImageLab main.cpp
         "Filter Classes/InversionFilter.h"
         "Filter Classes/ContrastNormalizationFilter.cpp"
         "Filter Classes/ContrastNormalizationFilter.h"
+        Pixel.cpp
+        Pixel.h
+        PixelGrayscale.cpp
+        PixelGrayscale.h
+        PixelBinary.cpp
+        PixelBinary.h
 )

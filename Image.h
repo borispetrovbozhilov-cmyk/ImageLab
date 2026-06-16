@@ -25,7 +25,7 @@ public:
     Image() = default;
     Image(const ImageType type, const unsigned int width, const unsigned int height, const unsigned int maxValue);
 
-    virtual ~Image() = 0;
+    virtual ~Image() = default;
 
     [[nodiscard]] unsigned int getSize() const;
     [[nodiscard]] unsigned int getHeight() const;

@@ -13,6 +13,8 @@
 
 class BlurFilter : public Filter{
 
+public:
+
     [[nodiscard]] std::unique_ptr<Filter> clone() const override;
 
     [[nodiscard]] std::unique_ptr<Image> executeFilter(std::unique_ptr<ImagePPM> source) const override;
@@ -29,10 +31,6 @@ protected:
     static uint16_t calculateAverageOfNeighbours
         (const std::vector<uint16_t>& originalPixels,
         const std::vector<unsigned>& neighbourIndexes, const unsigned countOfNeighbours);
-
-    static void travelMatrixInnerPart(const std::vector<uint16_t>& originalPixels,
-        const unsigned start, const unsigned end, const unsigned matrixWidth);
-
 };
 
 

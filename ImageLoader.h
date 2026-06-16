@@ -11,8 +11,8 @@
 
 class ImageLoader {
 
+private:
     static constexpr unsigned int MAX_VALUE_LARGEST_VALUE_POSSIBLE = 65535;
-
 
 public:
 
