@@ -12,9 +12,9 @@
 std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PGM
     (std::unique_ptr<ImagePGM> source,
      const std::function<uint16_t(const std::vector<uint16_t> &originalPixels,
-                                          const std::vector<unsigned> &neighbourIndexes,
+     const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
                                           const unsigned countOfNeighbours,
-                                          const unsigned maxValue)>& indexManipulation
+                                          const uint16_t maxValue)>& indexManipulation
     ) {
 
     const unsigned maxValue = source->getMaxValue();
@@ -54,9 +54,9 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PGM
                 const unsigned index = i * width + j;
 
                 // storing the indexes of the neighboring pixels
-                std::vector<unsigned> neighbourIndexes = {
+                std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
                     index - 1 - width, index - width, index + 1 - width,
-                    index - 1        ,    /*index*/   index + 1        ,
+                    index - 1        ,    index         ,   index + 1  ,
                     index - 1 + width, index + width, index + 1 + width
                 };
 
@@ -70,8 +70,9 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PGM
     // applying the filter over the borders(excluding corners)
     for (unsigned i = topLeftCorner + 1; i < topRightCorner; i++) {
 
-        std::vector<unsigned> neighbourIndexes = {
-            i - 1        ,/*current*/ i + 1        ,
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
+            std::nullopt, std::nullopt, std::nullopt,
+            i - 1        ,i            , i + 1        ,
             i - 1 + width, i + width, i + 1 + width
         };
 
@@ -81,9 +82,10 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PGM
 
     for (unsigned i = bottomLeftCorner + 1; i < bottomRightCorner; i++) {
 
-        std::vector<unsigned> neighbourIndexes = {
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
             i - 1 - width, i - width, i + 1 - width,
-            i - 1        ,/*current*/ i + 1
+            i - 1        ,i         ,    i + 1,
+            std::nullopt ,std::nullopt, std::nullopt
         };
 
         source->getPixelDataSource()[i] =
@@ -92,10 +94,10 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PGM
 
     for (unsigned i = topLeftCorner + width; i < bottomLeftCorner; i += width) {
 
-        std::vector<unsigned> neighbourIndexes = {
-            i - width, i + 1 - width,
-            /*current*/ i + 1        ,
-            i + width, i + 1 + width
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
+            std::nullopt, i - width, i + 1 - width,
+            std::nullopt, i        , i + 1        ,
+            std::nullopt, i + width, i + 1 + width
         };
 
         source->getPixelDataSource()[i] =
@@ -104,10 +106,10 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PGM
 
     for (unsigned i = topRightCorner + width; i < bottomRightCorner; i += width) {
 
-        std::vector<unsigned> neighbourIndexes = {
-            i - 1 - width, i - width,
-            i - 1        ,/*current*/
-            i - 1 + width, i + width,
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
+            i - 1 - width, i - width, std::nullopt,
+            i - 1        , i        ,    std::nullopt,
+            i - 1 + width, i + width, std::nullopt
         };
 
         source->getPixelDataSource()[i] =
@@ -116,45 +118,46 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PGM
 
 
     // applying the filter to the corners of the image
-    std::vector<unsigned> topLeftNeighbors = {
-                /*current*/     topLeftCorner + 1        ,
-         topLeftCorner + width, topLeftCorner + 1 + width
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> topLeftNeighbors = {
+         std::nullopt, std::nullopt,          std::nullopt,
+         std::nullopt, topLeftCorner    ,           topLeftCorner + 1        ,
+         std::nullopt, topLeftCorner + width, topLeftCorner + 1 + width
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, topLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
-    std::vector<unsigned> topRightNeighbors = {
-         topRightCorner - 1        ,       /*current*/
-         topRightCorner - 1 + width, topRightCorner + width
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> topRightNeighbors = {
+         std::nullopt,               std::nullopt,           std::nullopt,
+         topRightCorner - 1        , topRightCorner        , std::nullopt,
+         topRightCorner - 1 + width, topRightCorner + width, std::nullopt
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, topRightNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
-    std::vector<unsigned> bottomLeftNeighbors = {
-         bottomLeftCorner - width, bottomLeftCorner + 1 - width
-               /*current*/       , bottomLeftCorner + 1
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> bottomLeftNeighbors = {
+         std::nullopt,             std::nullopt,                 std::nullopt,
+         bottomLeftCorner - width, bottomLeftCorner + 1 - width, std::nullopt,
+         bottomLeftCorner        ,bottomLeftCorner + 1,          std::nullopt
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, bottomLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
-    std::vector<unsigned> bottomRightNeighbors = {
-        bottomRightCorner - width - 1, bottomRightCorner - width,
-        bottomRightCorner - 1                   /*current*/
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> bottomRightNeighbors = {
+        std::nullopt, std::nullopt                 , std::nullopt,
+        std::nullopt, bottomRightCorner - width - 1, bottomRightCorner - width,
+        std::nullopt, bottomRightCorner - 1        , bottomRightCorner
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, bottomRightNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
     return std::move(source);
 }
-
 std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
-    (   std::unique_ptr<ImagePPM> source,
-        const std::function<PixelRGB(
-            const std::vector<PixelRGB>& originalPixels,
-            const std::vector<unsigned>& neighbourIndexes,
-            const unsigned countOfNeighbours,
-            const unsigned maxValue
-        )>& indexManipulation
+    (std::unique_ptr<ImagePPM> source,
+     const std::function<PixelRGB(const std::vector<PixelRGB> &originalPixels,
+     const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
+                                          const unsigned countOfNeighbours,
+                                          const uint16_t maxValue)>& indexManipulation
     ) {
 
     const unsigned maxValue = source->getMaxValue();
@@ -194,9 +197,9 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
                 const unsigned index = i * width + j;
 
                 // storing the indexes of the neighboring pixels
-                std::vector<unsigned> neighbourIndexes = {
+                std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
                     index - 1 - width, index - width, index + 1 - width,
-                    index - 1        ,    /*index*/   index + 1        ,
+                    index - 1        ,    index         ,   index + 1  ,
                     index - 1 + width, index + width, index + 1 + width
                 };
 
@@ -210,8 +213,9 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
     // applying the filter over the borders(excluding corners)
     for (unsigned i = topLeftCorner + 1; i < topRightCorner; i++) {
 
-        std::vector<unsigned> neighbourIndexes = {
-            i - 1        ,/*current*/ i + 1        ,
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
+            std::nullopt, std::nullopt, std::nullopt,
+            i - 1        ,i            , i + 1        ,
             i - 1 + width, i + width, i + 1 + width
         };
 
@@ -221,9 +225,10 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
 
     for (unsigned i = bottomLeftCorner + 1; i < bottomRightCorner; i++) {
 
-        std::vector<unsigned> neighbourIndexes = {
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
             i - 1 - width, i - width, i + 1 - width,
-            i - 1        ,/*current*/ i + 1
+            i - 1        ,i         ,    i + 1,
+            std::nullopt ,std::nullopt, std::nullopt
         };
 
         source->getPixelDataSource()[i] =
@@ -232,10 +237,10 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
 
     for (unsigned i = topLeftCorner + width; i < bottomLeftCorner; i += width) {
 
-        std::vector<unsigned> neighbourIndexes = {
-            i - width, i + 1 - width,
-            /*current*/ i + 1        ,
-            i + width, i + 1 + width
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
+            std::nullopt, i - width, i + 1 - width,
+            std::nullopt, i        , i + 1        ,
+            std::nullopt, i + width, i + 1 + width
         };
 
         source->getPixelDataSource()[i] =
@@ -244,10 +249,10 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
 
     for (unsigned i = topRightCorner + width; i < bottomRightCorner; i += width) {
 
-        std::vector<unsigned> neighbourIndexes = {
-            i - 1 - width, i - width,
-            i - 1        ,/*current*/
-            i - 1 + width, i + width,
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
+            i - 1 - width, i - width, std::nullopt,
+            i - 1        , i        ,    std::nullopt,
+            i - 1 + width, i + width, std::nullopt
         };
 
         source->getPixelDataSource()[i] =
@@ -256,30 +261,34 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
 
 
     // applying the filter to the corners of the image
-    std::vector<unsigned> topLeftNeighbors = {
-                /*current*/     topLeftCorner + 1        ,
-         topLeftCorner + width, topLeftCorner + 1 + width
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> topLeftNeighbors = {
+         std::nullopt, std::nullopt,          std::nullopt,
+         std::nullopt, topLeftCorner    ,           topLeftCorner + 1        ,
+         std::nullopt, topLeftCorner + width, topLeftCorner + 1 + width
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, topLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
-    std::vector<unsigned> topRightNeighbors = {
-         topRightCorner - 1        ,       /*current*/
-         topRightCorner - 1 + width, topRightCorner + width
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> topRightNeighbors = {
+         std::nullopt,               std::nullopt,           std::nullopt,
+         topRightCorner - 1        , topRightCorner        , std::nullopt,
+         topRightCorner - 1 + width, topRightCorner + width, std::nullopt
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, topRightNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
-    std::vector<unsigned> bottomLeftNeighbors = {
-         bottomLeftCorner - width, bottomLeftCorner + 1 - width
-               /*current*/       , bottomLeftCorner + 1
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> bottomLeftNeighbors = {
+         std::nullopt,             std::nullopt,                 std::nullopt,
+         bottomLeftCorner - width, bottomLeftCorner + 1 - width, std::nullopt,
+         bottomLeftCorner        ,bottomLeftCorner + 1,          std::nullopt
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, bottomLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
-    std::vector<unsigned> bottomRightNeighbors = {
-        bottomRightCorner - width - 1, bottomRightCorner - width,
-        bottomRightCorner - 1                   /*current*/
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> bottomRightNeighbors = {
+        std::nullopt, std::nullopt                 , std::nullopt,
+        std::nullopt, bottomRightCorner - width - 1, bottomRightCorner - width,
+        std::nullopt, bottomRightCorner - 1        , bottomRightCorner
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, bottomRightNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
@@ -288,13 +297,11 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
 }
 
 std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PBM
-    (   std::unique_ptr<ImagePBM> source,
-        const std::function<bool(
-            const std::vector<bool>& originalPixels,
-            const std::vector<unsigned>& neighbourIndexes,
-            const unsigned countOfNeighbours,
-            const unsigned maxValue
-        )>& indexManipulation
+    (std::unique_ptr<ImagePBM> source,
+     const std::function<bool(const std::vector<bool> &originalPixels,
+     const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
+                                          const unsigned countOfNeighbours,
+                                          const uint16_t maxValue)>& indexManipulation
     ) {
 
     const unsigned maxValue = source->getMaxValue();
@@ -334,9 +341,9 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PBM
                 const unsigned index = i * width + j;
 
                 // storing the indexes of the neighboring pixels
-                std::vector<unsigned> neighbourIndexes = {
+                std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
                     index - 1 - width, index - width, index + 1 - width,
-                    index - 1        ,    /*index*/   index + 1        ,
+                    index - 1        ,    index         ,   index + 1  ,
                     index - 1 + width, index + width, index + 1 + width
                 };
 
@@ -350,8 +357,9 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PBM
     // applying the filter over the borders(excluding corners)
     for (unsigned i = topLeftCorner + 1; i < topRightCorner; i++) {
 
-        std::vector<unsigned> neighbourIndexes = {
-            i - 1        ,/*current*/ i + 1        ,
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
+            std::nullopt, std::nullopt, std::nullopt,
+            i - 1        ,i            , i + 1        ,
             i - 1 + width, i + width, i + 1 + width
         };
 
@@ -361,9 +369,10 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PBM
 
     for (unsigned i = bottomLeftCorner + 1; i < bottomRightCorner; i++) {
 
-        std::vector<unsigned> neighbourIndexes = {
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
             i - 1 - width, i - width, i + 1 - width,
-            i - 1        ,/*current*/ i + 1
+            i - 1        ,i         ,    i + 1,
+            std::nullopt ,std::nullopt, std::nullopt
         };
 
         source->getPixelDataSource()[i] =
@@ -372,10 +381,10 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PBM
 
     for (unsigned i = topLeftCorner + width; i < bottomLeftCorner; i += width) {
 
-        std::vector<unsigned> neighbourIndexes = {
-            i - width, i + 1 - width,
-            /*current*/ i + 1        ,
-            i + width, i + 1 + width
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
+            std::nullopt, i - width, i + 1 - width,
+            std::nullopt, i        , i + 1        ,
+            std::nullopt, i + width, i + 1 + width
         };
 
         source->getPixelDataSource()[i] =
@@ -384,10 +393,10 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PBM
 
     for (unsigned i = topRightCorner + width; i < bottomRightCorner; i += width) {
 
-        std::vector<unsigned> neighbourIndexes = {
-            i - 1 - width, i - width,
-            i - 1        ,/*current*/
-            i - 1 + width, i + width,
+        std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> neighbourIndexes = {
+            i - 1 - width, i - width, std::nullopt,
+            i - 1        , i        ,    std::nullopt,
+            i - 1 + width, i + width, std::nullopt
         };
 
         source->getPixelDataSource()[i] =
@@ -396,30 +405,34 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PBM
 
 
     // applying the filter to the corners of the image
-    std::vector<unsigned> topLeftNeighbors = {
-                /*current*/     topLeftCorner + 1        ,
-         topLeftCorner + width, topLeftCorner + 1 + width
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> topLeftNeighbors = {
+         std::nullopt, std::nullopt,          std::nullopt,
+         std::nullopt, topLeftCorner    ,           topLeftCorner + 1        ,
+         std::nullopt, topLeftCorner + width, topLeftCorner + 1 + width
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, topLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
-    std::vector<unsigned> topRightNeighbors = {
-         topRightCorner - 1        ,       /*current*/
-         topRightCorner - 1 + width, topRightCorner + width
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> topRightNeighbors = {
+         std::nullopt,               std::nullopt,           std::nullopt,
+         topRightCorner - 1        , topRightCorner        , std::nullopt,
+         topRightCorner - 1 + width, topRightCorner + width, std::nullopt
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, topRightNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
-    std::vector<unsigned> bottomLeftNeighbors = {
-         bottomLeftCorner - width, bottomLeftCorner + 1 - width
-               /*current*/       , bottomLeftCorner + 1
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> bottomLeftNeighbors = {
+         std::nullopt,             std::nullopt,                 std::nullopt,
+         bottomLeftCorner - width, bottomLeftCorner + 1 - width, std::nullopt,
+         bottomLeftCorner        ,bottomLeftCorner + 1,          std::nullopt
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, bottomLeftNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);
 
-    std::vector<unsigned> bottomRightNeighbors = {
-        bottomRightCorner - width - 1, bottomRightCorner - width,
-        bottomRightCorner - 1                   /*current*/
+    std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3> bottomRightNeighbors = {
+        std::nullopt, std::nullopt                 , std::nullopt,
+        std::nullopt, bottomRightCorner - width - 1, bottomRightCorner - width,
+        std::nullopt, bottomRightCorner - 1        , bottomRightCorner
     };
     source->getPixelDataSource()[topLeftCorner] =
         indexManipulation(originalPixels, bottomRightNeighbors, CORNER_COUNT_OF_NEIGHBORS_3x3, maxValue);

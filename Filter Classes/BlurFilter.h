@@ -26,23 +26,23 @@ protected:
     // utility functions
     static uint16_t calculateAverageOfNeighboursPGM
         (const std::vector<uint16_t>& originalPixels,
-        const std::vector<unsigned>& neighbourIndexes,
+        const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
         const unsigned countOfNeighbours,
-        const unsigned maxValue
+        const uint16_t maxValue
         );
 
     static bool calculateAverageOfNeighboursPBM
     (const std::vector<bool>& originalPixels,
-    const std::vector<unsigned>& neighbourIndexes,
+    const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
     const unsigned countOfNeighbours,
-    const unsigned maxValue
+    const uint16_t maxValue
     );
 
     static PixelRGB calculateAverageOfNeighboursPPM
     (const std::vector<PixelRGB>& originalPixels,
-    const std::vector<unsigned>& neighbourIndexes,
+    const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
     const unsigned countOfNeighbours,
-    const unsigned maxValue
+    const uint16_t maxValue
     );
 };
 

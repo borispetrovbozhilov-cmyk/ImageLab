@@ -18,7 +18,7 @@ private:
 public:
 
     ImagePGM() = default;
-    ImagePGM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
+    ImagePGM(const unsigned int width, const unsigned int height, const uint16_t maxValue,
         std::vector<uint16_t>&& pixelData);
 
     std::vector<uint16_t>& getPixelDataSource();

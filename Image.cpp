@@ -15,7 +15,7 @@ unsigned int Image::getHeight() const {
     return height;
 }
 
-unsigned int Image::getMaxValue() const {
+uint16_t Image::getMaxValue() const {
 
     return maxValue;
 }
@@ -25,7 +25,7 @@ unsigned int Image::getWidth() const {
     return width;
 }
 
-Image::Image(const ImageType type, const unsigned int width, const unsigned int height, const unsigned int maxValue) :
+Image::Image(const ImageType type, const unsigned int width, const unsigned int height, const uint16_t maxValue) :
     type(type), height(height), width(width), size(width * height), maxValue(maxValue){
 
 }

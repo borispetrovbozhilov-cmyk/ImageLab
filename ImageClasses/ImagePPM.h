@@ -17,7 +17,7 @@ private:
 public:
 
     ImagePPM() = default;
-    ImagePPM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
+    ImagePPM(const unsigned int width, const unsigned int height, const uint16_t maxValue,
         std::vector<PixelRGB>&& pixelData);
 
     std::vector<PixelRGB>& getPixelDataSource();

@@ -18,18 +18,19 @@ std::unique_ptr<Filter> BlurFilter::clone() const {
 
 uint16_t BlurFilter::calculateAverageOfNeighboursPGM
     (const std::vector<uint16_t>& originalPixels,
-    const std::vector<unsigned> &neighbourIndexes,
+    const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
     const unsigned countOfNeighbours,
-    const unsigned maxValue
+    const uint16_t maxValue
     ) {
 
     // calculating average
     unsigned average = 0;
 
-    for (const unsigned index : neighbourIndexes) {
+    for (auto index : neighbourIndexes) {
 
-        // using the original pixels to calculate average, not the ones being updated
-        average += originalPixels[index];
+        if (!index.has_value()) continue;
+
+        average += originalPixels[index.value()];
     }
 
     average /= countOfNeighbours;
@@ -39,21 +40,23 @@ uint16_t BlurFilter::calculateAverageOfNeighboursPGM
 
 PixelRGB BlurFilter::calculateAverageOfNeighboursPPM
     (const std::vector<PixelRGB>& originalPixels,
-    const std::vector<unsigned> &neighbourIndexes,
+    const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
     const unsigned countOfNeighbours,
-    const unsigned maxValue
+    const uint16_t maxValue
     ) {
     // calculating average
     unsigned averageRed = 0;
     unsigned averageGreen = 0;
     unsigned averageBlue = 0;
 
-    for (const unsigned index : neighbourIndexes) {
+    for (auto index : neighbourIndexes) {
+
+        if (!index.has_value()) continue;
 
         // using the original pixels to calculate average, not the ones being updated
-        averageRed += originalPixels[index].red;
-        averageGreen += originalPixels[index].green;
-        averageBlue += originalPixels[index].blue;
+        averageRed += originalPixels[index.value()].red;
+        averageGreen += originalPixels[index.value()].green;
+        averageBlue += originalPixels[index.value()].blue;
     }
 
     averageRed /= countOfNeighbours;
@@ -66,18 +69,19 @@ PixelRGB BlurFilter::calculateAverageOfNeighboursPPM
 
 bool BlurFilter::calculateAverageOfNeighboursPBM
     (const std::vector<bool>& originalPixels,
-    const std::vector<unsigned> &neighbourIndexes,
+    const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
     const unsigned countOfNeighbours,
-    const unsigned maxValue
+    const uint16_t maxValue
     ) {
 
     // calculating average
     unsigned average = 0;
 
-    for (const unsigned index : neighbourIndexes) {
+    for (auto index : neighbourIndexes) {
 
-        // using the original pixels to calculate average, not the ones being updated
-        average += originalPixels[index];
+        if (!index.has_value()) continue;
+
+        average += originalPixels[index.value()];
     }
 
     average /= countOfNeighbours;

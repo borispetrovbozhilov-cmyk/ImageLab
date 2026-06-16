@@ -9,7 +9,7 @@
 
 #include "../Filter.h"
 
-ImagePPM::ImagePPM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
+ImagePPM::ImagePPM(const unsigned int width, const unsigned int height, const uint16_t maxValue,
                    std::vector<PixelRGB>&& pixelData) : Image(ImageType::PPM, width, height, maxValue),
                                                         pixelData(std::move(pixelData)){
 

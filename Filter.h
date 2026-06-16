@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <optional>
 
 #include "PixelRGB.h"
 
@@ -40,6 +41,7 @@ public:
 
 protected:
 
+    static constexpr unsigned KERNEL_SIZE_3x3 = 9;
     static constexpr unsigned INNER_COUNT_OF_NEIGHBORS_3x3 = 8;
     static constexpr unsigned BORDER_COUNT_OF_NEIGHBORS_3x3 = 5;
     static constexpr unsigned CORNER_COUNT_OF_NEIGHBORS_3x3 = 3;
@@ -48,9 +50,9 @@ protected:
     (   std::unique_ptr<ImagePGM> source,
         const std::function<uint16_t(
             const std::vector<uint16_t>& originalPixels,
-            const std::vector<unsigned>& neighbourIndexes,
+            const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
             const unsigned countOfNeighbours,
-            const unsigned maxValue
+            const uint16_t maxValue
         )>& indexManipulation
     );
 
@@ -58,9 +60,9 @@ protected:
     (   std::unique_ptr<ImagePPM> source,
         const std::function<PixelRGB(
             const std::vector<PixelRGB>& originalPixels,
-            const std::vector<unsigned>& neighbourIndexes,
+            const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
             const unsigned countOfNeighbours,
-            const unsigned maxValue
+            const uint16_t maxValue
         )>& indexManipulation
     );
 
@@ -68,9 +70,9 @@ protected:
     (   std::unique_ptr<ImagePBM> source,
         const std::function<bool(
             const std::vector<bool>& originalPixels,
-            const std::vector<unsigned>& neighbourIndexes,
+            const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
             const unsigned countOfNeighbours,
-            const unsigned maxValue
+            const uint16_t maxValue
         )>& indexManipulation
     );
 };
