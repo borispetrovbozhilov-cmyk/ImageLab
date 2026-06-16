@@ -3,14 +3,14 @@
 //
 
 #include "ImagePBM.h"
-#include "Image.h"
+#include "../Image.h"
 
 #include <fstream>
 
-#include "Filter.h"
+#include "../Filter.h"
 
 ImagePBM::ImagePBM(const unsigned int width, const unsigned int height, std::vector<bool>&& pixelData) :
-    Image(ImageType::PBM, width, height, 0), pixelData(std::move(pixelData)){
+    Image(ImageType::PBM, width, height, 1), pixelData(std::move(pixelData)){
 
 }
 
@@ -39,4 +39,9 @@ void ImagePBM::saveImage(const std::string& filePath) const {
 std::unique_ptr<Image> ImagePBM::applyFilter(const std::unique_ptr<Filter> &filter) const {
 
     return filter->executeFilter(std::make_unique<ImagePBM>(*this));
+}
+
+std::vector<bool> &ImagePBM::getPixelDataSource() {
+
+    return pixelData;
 }

@@ -5,7 +5,7 @@
 #ifndef IMAGELAB_IMAGEPBM_H
 #define IMAGELAB_IMAGEPBM_H
 
-#include "Image.h"
+#include "../Image.h"
 
 class ImagePBM : public Image{
 
@@ -17,6 +17,8 @@ public:
 
     ImagePBM() = default;
     ImagePBM(const unsigned int width, const unsigned int height, std::vector<bool>&& pixelData);
+
+    std::vector<bool>& getPixelDataSource();
 
     virtual void saveImage(const std::string& filePath) const override;
     [[nodiscard]] virtual std::unique_ptr<Image> clone() const override;

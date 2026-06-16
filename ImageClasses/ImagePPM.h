@@ -4,8 +4,8 @@
 
 #ifndef IMAGELAB_IMAGEPPM_H
 #define IMAGELAB_IMAGEPPM_H
-#include "Image.h"
-#include "PixelRGB.h"
+#include "../Image.h"
+#include "../PixelRGB.h"
 
 
 class ImagePPM : public Image{
@@ -20,10 +20,12 @@ public:
     ImagePPM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
         std::vector<PixelRGB>&& pixelData);
 
-    virtual void saveImage(const std::string& filePath) const override;
-    [[nodiscard]] virtual std::unique_ptr<Image> clone() const override;
+    std::vector<PixelRGB>& getPixelDataSource();
 
-    [[nodiscard]] virtual std::unique_ptr<Image> applyFilter(const std::unique_ptr<Filter>& filter) const override;
+    void saveImage(const std::string& filePath) const override;
+    [[nodiscard]] std::unique_ptr<Image> clone() const override;
+
+    [[nodiscard]] std::unique_ptr<Image> applyFilter(const std::unique_ptr<Filter>& filter) const override;
 
     ~ImagePPM() override = default;
 };

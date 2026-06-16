@@ -6,7 +6,7 @@
 #define IMAGELAB_IMAGEPGM_H
 
 
-#include "Image.h"
+#include "../Image.h"
 
 
 class ImagePGM : public Image{
@@ -20,6 +20,8 @@ public:
     ImagePGM() = default;
     ImagePGM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
         std::vector<uint16_t>&& pixelData);
+
+    std::vector<uint16_t>& getPixelDataSource();
 
     virtual void saveImage(const std::string& filePath) const override;
     [[nodiscard]] virtual std::unique_ptr<Image> clone() const override;

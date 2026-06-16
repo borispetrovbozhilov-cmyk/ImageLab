@@ -3,11 +3,11 @@
 //
 
 #include "ImagePPM.h"
-#include "Image.h"
+#include "../Image.h"
 
 #include <fstream>
 
-#include "Filter.h"
+#include "../Filter.h"
 
 ImagePPM::ImagePPM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
                    std::vector<PixelRGB>&& pixelData) : Image(ImageType::PPM, width, height, maxValue),
@@ -42,4 +42,9 @@ void ImagePPM::saveImage(const std::string& filePath) const {
 std::unique_ptr<Image> ImagePPM::applyFilter(const std::unique_ptr<Filter> &filter) const {
 
     return filter->executeFilter(std::make_unique<ImagePPM>(*this));
+}
+
+std::vector<PixelRGB> &ImagePPM::getPixelDataSource() {
+
+    return pixelData;
 }

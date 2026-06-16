@@ -3,11 +3,11 @@
 //
 
 #include "ImagePGM.h"
-#include "Image.h"
+#include "../Image.h"
 
 #include <fstream>
 
-#include "Filter.h"
+#include "../Filter.h"
 
 ImagePGM::ImagePGM(const unsigned int width, const unsigned int height, const unsigned int maxValue,
                    std::vector<uint16_t>&& pixelData) :
@@ -40,4 +40,9 @@ void ImagePGM::saveImage(const std::string& filePath) const {
 std::unique_ptr<Image> ImagePGM::applyFilter(const std::unique_ptr<Filter> &filter) const {
 
     return filter->executeFilter(std::make_unique<ImagePGM>(*this));
+}
+
+std::vector<uint16_t> &ImagePGM::getPixelDataSource() {
+
+    return pixelData;
 }
