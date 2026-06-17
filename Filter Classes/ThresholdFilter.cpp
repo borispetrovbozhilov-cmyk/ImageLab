@@ -20,36 +20,48 @@ std::unique_ptr<Filter> ThresholdFilter::clone() const {
 
 std::unique_ptr<Image> ThresholdFilter::executeFilter(std::unique_ptr<ImagePGM> source) const {
 
+    std::vector<bool> binaryPixels;
+    binaryPixels.reserve(source->getPixelDataSource().size());
+
     auto temp =
         std::move(Filter::travelImageWithKernel3x3_PGM(std::move(source), findPixelMagnitudePGM));
 
     const unsigned size = temp->getSize();
-    const unsigned maxValue = temp->getMaxValue();
+    const unsigned w = temp->getWidth();
+    const unsigned h = temp->getHeight();
+    std::string name = temp->getName();
 
     for (unsigned i = 0; i < size; i++) {
 
-        temp->getPixelDataSource()[i] = temp->getPixelDataSource()[i] > threshold ? maxValue : 0;
+        binaryPixels.push_back(temp->getPixelDataSource()[i] >= threshold);
     }
 
-    return std::move(temp);
+    return std::make_unique<ImagePBM>(std::move(name), w, h, std::move(binaryPixels));
 }
 
 std::unique_ptr<Image> ThresholdFilter::executeFilter(std::unique_ptr<ImagePPM> source) const {
+
+    std::vector<bool> binaryPixels;
+    binaryPixels.reserve(source->getPixelDataSource().size());
 
     auto temp =
         std::move(Filter::travelImageWithKernel3x3_PPM(std::move(source), findPixelMagnitudePPM));
 
     const unsigned size = temp->getSize();
-    const unsigned maxValue = temp->getMaxValue();
+    const unsigned w = temp->getWidth();
+    const unsigned h = temp->getHeight();
+    std::string name = temp->getName();
 
     for (unsigned i = 0; i < size; i++) {
 
-        temp->getPixelDataSource()[i].red = temp->getPixelDataSource()[i].red > threshold ? maxValue : 0;
-        temp->getPixelDataSource()[i].green = temp->getPixelDataSource()[i].green > threshold ? maxValue : 0;
-        temp->getPixelDataSource()[i].blue = temp->getPixelDataSource()[i].blue > threshold ? maxValue : 0;
+        uint16_t red = temp->getPixelDataSource()[i].red;
+        uint16_t green = temp->getPixelDataSource()[i].green;
+        uint16_t blue = temp->getPixelDataSource()[i].blue;
+
+        binaryPixels.push_back((0.299 * red + 0.587 * blue + 0.114 * green) >= threshold);
     }
 
-    return std::move(temp);
+    return std::make_unique<ImagePBM>(std::move(name), w, h, std::move(binaryPixels));
 }
 
 std::unique_ptr<Image> ThresholdFilter::executeFilter(std::unique_ptr<ImagePBM> source) const {

@@ -34,8 +34,6 @@ int main() {
 
     ImageEditor editor;
 
-    editor.start();
-
     // editor.loadImage("baboon.ascii.pgm");
     // editor.addFilterToImage("baboon.ascii.pgm", "blur");
     // editor.addFilterToImage("baboon.ascii.pgm", "sharpen");
@@ -45,4 +43,10 @@ int main() {
     // editor.editAll();
     // editor.saveImage("baboon.ascii.pgm", "baboonSave.pgm");
 
+    editor.loadImage("sines.ascii.ppm");
+    editor.addFilterToImage("sines.ascii.ppm", "threshold", 252);
+    editor.editImage("sines.ascii.ppm");
+    editor.saveImage("sines.ascii.ppm", "sinesBinary.pbm");
+
+    // editor.start();
 }
