@@ -15,6 +15,7 @@ private:
 
     std::unique_ptr<Image> sourceImage;
     std::vector<std::unique_ptr<Filter>> filterPipeline;
+    std::unique_ptr<Image> editedImage;
 
 public:
 
@@ -26,8 +27,10 @@ public:
     void addFilter(std::unique_ptr<Filter> filter);
     void removeFilterAtIndex(const unsigned index);
     void printAllFiltersInPipeline(std::ostream& output) const;
+    void applyAllFiltersInPipeline();
 
-    std::unique_ptr<Image> applyAllFiltersInPipeline() const;
+    [[nodiscard]] const std::unique_ptr<Image>& getEditedImage() const;
+    const std::string& getSourceImageName() const;
 };
 
 

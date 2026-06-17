@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "ImageEditor.h"
 #include "ImageLoader.h"
 #include "ImagePipeline.h"
 #include "Filter Classes/BlurFilter.h"
@@ -31,11 +32,15 @@ int main() {
     // resultPGM->saveImage("sobelPGM_edit.pgm");
     // resultPBM->saveImage("sobelPBM_edit.pbm");
 
-    ImagePipeline stars = ImagePipeline(ImageLoader::loadImage("star_field.ascii.ppm"));
-    stars.addFilter(std::make_unique<BlurFilter>());
-    stars.addFilter(std::make_unique<ThresholdFilter>(250));
-    stars.printAllFiltersInPipeline(std::cout);
-    stars.removeFilterAtIndex(1);
-    auto starsEdit = stars.applyAllFiltersInPipeline();
-    starsEdit->saveImage("StarsEdited.ppm");
+    ImageEditor editor;
+
+    editor.loadImage("baboon.ascii.pgm");
+    editor.addFilterToImage("baboon.ascii.pgm", "blur");
+    editor.addFilterToImage("baboon.ascii.pgm", "sharpen");
+    editor.addFilterToImage("baboon.ascii.pgm", "threshold", 252);
+    editor.showAllFilters();
+    editor.removeFilterFromImage("baboon.ascii.pgm", 1);
+    editor.editAll();
+    editor.saveImage("baboon.ascii.pgm", "baboonSave.pgm");
+
 }

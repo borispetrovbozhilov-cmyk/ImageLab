@@ -34,7 +34,7 @@ public:
     [[nodiscard]] unsigned int getHeight() const;
     [[nodiscard]] unsigned int getWidth() const;
     [[nodiscard]] uint16_t getMaxValue() const;
-    [[nodiscard]] std::string getName() const;
+    [[nodiscard]] const std::string& getName() const;
 
     virtual void saveImage(const std::string& filePath) const = 0;
     [[nodiscard]] virtual std::unique_ptr<Image> clone() const = 0;

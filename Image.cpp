@@ -4,7 +4,7 @@
 
 #include "Image.h"
 
-std::string Image::getName() const {
+const std::string& Image::getName() const {
 
     return name;
 }

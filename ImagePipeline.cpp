@@ -41,18 +41,30 @@ void ImagePipeline::printAllFiltersInPipeline(std::ostream &output) const {
     }
 }
 
-std::unique_ptr<Image> ImagePipeline::applyAllFiltersInPipeline() const {
+void ImagePipeline::applyAllFiltersInPipeline() {
 
     const unsigned size = filterPipeline.size();
 
-    if (filterPipeline.empty()) return sourceImage->clone();
+    if (filterPipeline.empty()) {
 
-    auto result = sourceImage->applyFilter(filterPipeline[0]);
+        editedImage = sourceImage->clone();
+        return;
+    }
+
+    editedImage = sourceImage->applyFilter(filterPipeline[0]);
 
     for (unsigned i = 1; i < size; i++) {
 
-        result = result->applyFilter(filterPipeline[i]);
+        editedImage = editedImage->applyFilter(filterPipeline[i]);
     }
+}
 
-    return std::move(result);
+const std::unique_ptr<Image>& ImagePipeline::getEditedImage() const{
+
+    return std::move(editedImage);
+}
+
+const std::string &ImagePipeline::getSourceImageName() const {
+
+    return sourceImage->getName();
 }
