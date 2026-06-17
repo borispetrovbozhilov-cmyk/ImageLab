@@ -20,12 +20,16 @@ add_executable(ImageLab main.cpp
         Filter.h
         "Filter Classes/BlurFilter.cpp"
         "Filter Classes/BlurFilter.h"
-        "Filter Classes/SobelFilter.cpp"
-        "Filter Classes/SobelFilter.h"
         "Filter Classes/SharpenFilter.cpp"
         "Filter Classes/SharpenFilter.h"
         "Filter Classes/InversionFilter.cpp"
         "Filter Classes/InversionFilter.h"
         "Filter Classes/ContrastNormalizationFilter.cpp"
         "Filter Classes/ContrastNormalizationFilter.h"
+        "Filter Classes/SobelBlueprint.cpp"
+        "Filter Classes/SobelBlueprint.h"
+        "Filter Classes/SobelFilter.cpp"
+        "Filter Classes/SobelFilter.h"
+        "Filter Classes/ThresholdFilter.cpp"
+        "Filter Classes/ThresholdFilter.h"
 )

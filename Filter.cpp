@@ -9,7 +9,7 @@
 #include "ImageClasses/ImagePBM.h"
 
 
-std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PGM
+std::unique_ptr<ImagePGM> Filter::travelImageWithKernel3x3_PGM
     (std::unique_ptr<ImagePGM> source,
      const std::function<uint16_t(const std::vector<uint16_t> &originalPixels,
      const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
@@ -152,7 +152,7 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PGM
 
     return std::move(source);
 }
-std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
+std::unique_ptr<ImagePPM> Filter::travelImageWithKernel3x3_PPM
     (std::unique_ptr<ImagePPM> source,
      const std::function<PixelRGB(const std::vector<PixelRGB> &originalPixels,
      const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,
@@ -296,7 +296,7 @@ std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PPM
     return std::move(source);
 }
 
-std::unique_ptr<Image> Filter::travelImageWithKernel3x3_PBM
+std::unique_ptr<ImagePBM> Filter::travelImageWithKernel3x3_PBM
     (std::unique_ptr<ImagePBM> source,
      const std::function<bool(const std::vector<bool> &originalPixels,
      const std::array<std::optional<unsigned>, Filter::KERNEL_SIZE_3x3>& neighbourIndexes,

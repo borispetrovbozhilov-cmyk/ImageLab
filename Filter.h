@@ -46,7 +46,7 @@ protected:
     static constexpr unsigned BORDER_COUNT_OF_NEIGHBORS_3x3 = 5;
     static constexpr unsigned CORNER_COUNT_OF_NEIGHBORS_3x3 = 3;
 
-    static std::unique_ptr<Image> travelImageWithKernel3x3_PGM
+    static std::unique_ptr<ImagePGM> travelImageWithKernel3x3_PGM
     (   std::unique_ptr<ImagePGM> source,
         const std::function<uint16_t(
             const std::vector<uint16_t>& originalPixels,
@@ -56,7 +56,7 @@ protected:
         )>& indexManipulation
     );
 
-    static std::unique_ptr<Image> travelImageWithKernel3x3_PPM
+    static std::unique_ptr<ImagePPM> travelImageWithKernel3x3_PPM
     (   std::unique_ptr<ImagePPM> source,
         const std::function<PixelRGB(
             const std::vector<PixelRGB>& originalPixels,
@@ -66,7 +66,7 @@ protected:
         )>& indexManipulation
     );
 
-    static std::unique_ptr<Image> travelImageWithKernel3x3_PBM
+    static std::unique_ptr<ImagePBM> travelImageWithKernel3x3_PBM
     (   std::unique_ptr<ImagePBM> source,
         const std::function<bool(
             const std::vector<bool>& originalPixels,
