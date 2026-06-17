@@ -9,8 +9,8 @@
 
 #include "../Filter.h"
 
-ImagePBM::ImagePBM(const unsigned int width, const unsigned int height, std::vector<bool>&& pixelData) :
-    Image(ImageType::PBM, width, height, 1), pixelData(std::move(pixelData)){
+ImagePBM::ImagePBM(std::string name, const unsigned int width, const unsigned int height, std::vector<bool>&& pixelData) :
+    Image(ImageType::PBM, std::move(name), width, height, 1), pixelData(std::move(pixelData)){
 
 }
 

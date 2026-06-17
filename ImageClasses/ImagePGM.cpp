@@ -9,9 +9,9 @@
 
 #include "../Filter.h"
 
-ImagePGM::ImagePGM(const unsigned int width, const unsigned int height, const uint16_t maxValue,
+ImagePGM::ImagePGM(std::string name, const unsigned int width, const unsigned int height, const uint16_t maxValue,
                    std::vector<uint16_t>&& pixelData) :
-    Image(ImageType::PGM, width, height, maxValue), pixelData(std::move(pixelData)){
+    Image(ImageType::PGM, std::move(name), width, height, maxValue), pixelData(std::move(pixelData)){
 
 }
 

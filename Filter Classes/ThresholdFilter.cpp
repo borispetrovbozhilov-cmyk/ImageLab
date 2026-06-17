@@ -8,6 +8,11 @@
 #include "../ImageClasses/ImagePGM.h"
 #include "../ImageClasses/ImagePPM.h"
 
+std::string ThresholdFilter::getFilterInfo() const {
+
+    return std::move("Threshold filter, threshold = " + std::to_string(threshold));
+}
+
 std::unique_ptr<Filter> ThresholdFilter::clone() const {
 
     return std::make_unique<ThresholdFilter>(*this);

@@ -55,7 +55,7 @@ std::unique_ptr<Image> ImageLoader::loadImage(const std::string &filePath) {
 
             file.close();
 
-            return std::make_unique<ImagePBM>(width, height, std::move(pixelData));
+            return std::make_unique<ImagePBM>(filePath, width, height, std::move(pixelData));
         }
 
         // PGM
@@ -85,7 +85,7 @@ std::unique_ptr<Image> ImageLoader::loadImage(const std::string &filePath) {
 
             file.close();
 
-            return std::make_unique<ImagePGM>(width, height, maxValue, std::move(pixelData));
+            return std::make_unique<ImagePGM>(filePath, width, height, maxValue, std::move(pixelData));
         }
 
         // PPM
@@ -120,7 +120,7 @@ std::unique_ptr<Image> ImageLoader::loadImage(const std::string &filePath) {
 
             file.close();
 
-            return std::make_unique<ImagePPM>(width, height, maxValue, std::move(pixelData));
+            return std::make_unique<ImagePPM>(filePath, width, height, maxValue, std::move(pixelData));
         }
 
         // Other(Invalid)

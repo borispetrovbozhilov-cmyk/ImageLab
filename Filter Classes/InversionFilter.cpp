@@ -8,6 +8,11 @@
 #include "../ImageClasses/ImagePGM.h"
 #include "../ImageClasses/ImagePPM.h"
 
+std::string InversionFilter::getFilterInfo() const {
+
+    return std::move("Inversion filter");
+}
+
 std::unique_ptr<Filter> InversionFilter::clone() const {
 
     return std::make_unique<InversionFilter>(*this);

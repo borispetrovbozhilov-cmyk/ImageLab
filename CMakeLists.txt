@@ -32,4 +32,6 @@ add_executable(ImageLab main.cpp
         "Filter Classes/SobelFilter.h"
         "Filter Classes/ThresholdFilter.cpp"
         "Filter Classes/ThresholdFilter.h"
+        ImagePipeline.cpp
+        ImagePipeline.h
 )

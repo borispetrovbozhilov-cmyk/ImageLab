@@ -37,6 +37,8 @@ public:
 
     [[nodiscard]] virtual std::unique_ptr<Filter> clone() const = 0;
 
+    virtual std::string getFilterInfo() const = 0;
+
     virtual ~Filter() = default;
 
 protected:

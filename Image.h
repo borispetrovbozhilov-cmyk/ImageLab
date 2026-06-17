@@ -25,7 +25,8 @@ public:
     };
 
     Image() = default;
-    Image(const ImageType type, const unsigned int width, const unsigned int height, const uint16_t maxValue);
+    Image(const ImageType type, std::string name,
+        const unsigned int width, const unsigned int height, const uint16_t maxValue);
 
     virtual ~Image() = default;
 
@@ -33,6 +34,7 @@ public:
     [[nodiscard]] unsigned int getHeight() const;
     [[nodiscard]] unsigned int getWidth() const;
     [[nodiscard]] uint16_t getMaxValue() const;
+    [[nodiscard]] std::string getName() const;
 
     virtual void saveImage(const std::string& filePath) const = 0;
     [[nodiscard]] virtual std::unique_ptr<Image> clone() const = 0;
@@ -42,6 +44,7 @@ public:
 protected:
 
     ImageType type = ImageType::Unknown;
+    std::string name;
     unsigned int height = 0;
     unsigned int width = 0;
     unsigned int size = 0;

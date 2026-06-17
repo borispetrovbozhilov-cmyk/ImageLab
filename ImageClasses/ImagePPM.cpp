@@ -9,10 +9,10 @@
 
 #include "../Filter.h"
 
-ImagePPM::ImagePPM(const unsigned int width, const unsigned int height, const uint16_t maxValue,
-                   std::vector<PixelRGB>&& pixelData) : Image(ImageType::PPM, width, height, maxValue),
+ImagePPM::ImagePPM(std::string name, const unsigned int width, const unsigned int height, const uint16_t maxValue,
+                   std::vector<PixelRGB>&& pixelData) : Image(ImageType::PPM, std::move(name),
+                                                        width, height, maxValue),
                                                         pixelData(std::move(pixelData)){
-
 }
 
 std::unique_ptr<Image> ImagePPM::clone() const {

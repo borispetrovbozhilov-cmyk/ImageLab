@@ -11,6 +11,11 @@
 #include "../ImageClasses/ImagePGM.h"
 #include "../ImageClasses/ImagePPM.h"
 
+std::string BlurFilter::getFilterInfo() const {
+
+    return std::move("Blur filter");
+}
+
 std::unique_ptr<Filter> BlurFilter::clone() const {
 
     return std::make_unique<BlurFilter>(*this);

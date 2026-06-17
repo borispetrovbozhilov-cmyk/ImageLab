@@ -8,6 +8,11 @@
 #include "../ImageClasses/ImagePGM.h"
 #include "../ImageClasses/ImagePPM.h"
 
+std::string SobelFilter::getFilterInfo() const {
+
+    return std::move("Sobel filter");
+}
+
 std::unique_ptr<Filter> SobelFilter::clone() const {
 
     return std::make_unique<SobelFilter>(*this);

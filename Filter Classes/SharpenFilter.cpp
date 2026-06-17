@@ -7,6 +7,11 @@
 #include "../ImageClasses/ImagePGM.h"
 #include "../ImageClasses/ImagePPM.h"
 
+std::string SharpenFilter::getFilterInfo() const {
+
+    return std::move("Sharpen filter");
+}
+
 std::unique_ptr<Filter> SharpenFilter::clone() const {
 
     return std::make_unique<SharpenFilter>(*this);

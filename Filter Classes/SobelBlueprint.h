@@ -19,6 +19,8 @@ public:
     [[nodiscard]] std::unique_ptr<Image> executeFilter(std::unique_ptr<ImagePGM> source) const override = 0;
     [[nodiscard]] std::unique_ptr<Image> executeFilter(std::unique_ptr<ImagePBM> source) const override = 0;
 
+    std::string getFilterInfo() const override = 0;
+
 protected:
 
     static constexpr std::array<int, Filter::KERNEL_SIZE_3x3> MatrixGx{

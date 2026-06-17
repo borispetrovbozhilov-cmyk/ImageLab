@@ -8,6 +8,11 @@
 #include "../ImageClasses/ImagePPM.h"
 #include "../ImageClasses/ImagePBM.h"
 
+std::string ContrastNormalizationFilter::getFilterInfo() const {
+
+    return std::move("Contrast Normalization filter");
+}
+
 std::unique_ptr<Filter> ContrastNormalizationFilter::clone() const {
 
     return std::make_unique<ContrastNormalizationFilter>(*this);

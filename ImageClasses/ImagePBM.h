@@ -16,7 +16,7 @@ private:
 public:
 
     ImagePBM() = default;
-    ImagePBM(const unsigned int width, const unsigned int height, std::vector<bool>&& pixelData);
+    ImagePBM(std::string name, const unsigned int width, const unsigned int height, std::vector<bool>&& pixelData);
 
     std::vector<bool>& getPixelDataSource();
 
