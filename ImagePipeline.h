@@ -31,6 +31,7 @@ public:
 
     [[nodiscard]] const std::unique_ptr<Image>& getEditedImage() const;
     const std::string& getSourceImageName() const;
+    unsigned getCountOfFilters() const;
 };
 
 

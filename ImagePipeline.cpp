@@ -68,3 +68,8 @@ const std::string &ImagePipeline::getSourceImageName() const {
 
     return sourceImage->getName();
 }
+
+unsigned ImagePipeline::getCountOfFilters() const {
+
+    return filterPipeline.size();
+}

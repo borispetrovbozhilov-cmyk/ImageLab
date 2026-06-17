@@ -38,7 +38,8 @@ void ImageEditor::addFilterToImage(const std::string &imageName, const std::stri
                 std::unique_ptr<Filter> filter = FilterFactory::createFilter(filterName);
                 images[i].addFilter(std::move(filter));
 
-                std::cout << "Added " << filterName << " filter to the " << imageName << " image" << std::endl;
+                std::cout << "Added " << filterName << " filter to the "
+                << imageName << " image, index = " << images[i].getCountOfFilters() - 1 << std::endl;
 
                 return;
             }
@@ -46,7 +47,8 @@ void ImageEditor::addFilterToImage(const std::string &imageName, const std::stri
             std::unique_ptr<Filter> filter = FilterFactory::createFilter(filterName, threshold);
             images[i].addFilter(std::move(filter));
 
-            std::cout << "Added " << filterName << " filter to the " << imageName << " image" << std::endl;
+            std::cout << "Added " << filterName << " filter to the "
+            << imageName << " image, index = " << images[i].getCountOfFilters() - 1 << std::endl;
 
             return;
         }
@@ -190,7 +192,6 @@ void ImageEditor::start() {
                 inputLineStream >> filePath;
 
                 loadImage(filePath);
-
                 continue;
             }
 
@@ -204,35 +205,65 @@ void ImageEditor::start() {
                 inputLineStream >> filterName;
 
                 if (inputLineStream >> threshold) {
-                    addFilterToImage(imageName, filterName, std::stoi(threshold));
 
+                    addFilterToImage(imageName, filterName, std::stoi(threshold));
                     continue;
                 }
+
                 addFilterToImage(imageName, filterName);
+                continue;
             }
 
             if (command == "remove-filter") {
 
+                std::string imageName;
+                std::string filterIndex;
+                inputLineStream >> imageName;
+                inputLineStream >> filterIndex;
+
+                removeFilterFromImage(imageName, std::stoi(filterIndex));
+                continue;
             }
 
             if (command == "show-filters") {
 
+                std::string imageName;
+                inputLineStream >> imageName;
+
+                showFiltersOfImage(imageName);
+                continue;
             }
 
             if (command == "show-all-filters") {
 
+                showAllFilters();
+                continue;
             }
 
             if (command == "edit") {
 
+                std::string imageName;
+                inputLineStream >> imageName;
+
+                editImage(imageName);
+                continue;
             }
 
             if (command == "edit-all") {
 
+                editAll();
+                continue;
             }
 
             if (command == "save-image") {
 
+                std::string imageName;
+                std::string fileName;
+                inputLineStream >> imageName;
+                inputLineStream >> fileName;
+
+                saveImage(imageName, fileName);
+                continue;
             }
 
             if (command == "quit") {

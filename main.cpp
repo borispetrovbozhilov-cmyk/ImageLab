@@ -34,13 +34,15 @@ int main() {
 
     ImageEditor editor;
 
-    editor.loadImage("baboon.ascii.pgm");
-    editor.addFilterToImage("baboon.ascii.pgm", "blur");
-    editor.addFilterToImage("baboon.ascii.pgm", "sharpen");
-    editor.addFilterToImage("baboon.ascii.pgm", "threshold", 252);
-    editor.showAllFilters();
-    editor.removeFilterFromImage("baboon.ascii.pgm", 1);
-    editor.editAll();
-    editor.saveImage("baboon.ascii.pgm", "baboonSave.pgm");
+    editor.start();
+
+    // editor.loadImage("baboon.ascii.pgm");
+    // editor.addFilterToImage("baboon.ascii.pgm", "blur");
+    // editor.addFilterToImage("baboon.ascii.pgm", "sharpen");
+    // editor.addFilterToImage("baboon.ascii.pgm", "threshold", 252);
+    // editor.showAllFilters();
+    // editor.removeFilterFromImage("baboon.ascii.pgm", 1);
+    // editor.editAll();
+    // editor.saveImage("baboon.ascii.pgm", "baboonSave.pgm");
 
 }
